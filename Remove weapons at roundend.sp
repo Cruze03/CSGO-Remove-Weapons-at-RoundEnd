@@ -3,7 +3,11 @@
 #include <sdkhooks>
 #include <cstrike>
 
-public Plugin: myinfo =
+#pragma newdecls required
+#pragma newdecls required
+
+
+public Plugin myinfo =
 {
 	name = "[Any] Remove Weapons at Round End",
 	author = "Cruze",
@@ -18,7 +22,7 @@ public void OnPluginStart()
 }
 public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 {
-	for (new client=1; client<=MaxClients; ++client) 
+	for (int client = 1; client<=MaxClients; ++client) 
 	{
 		if (IsClientInGame(client) && !IsClientObserver(client) && IsPlayerAlive(client)) 
 		{
@@ -40,8 +44,8 @@ public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 		}
 	}
 
-	new String: buffer[64];
-	for(new entity = MaxClients; entity < GetMaxEntities(); entity++)
+	char buffer[64];
+	for(int entity = MaxClients; entity < GetMaxEntities(); entity++)
 	{
 		if(IsValidEntity(entity))
 		{
