@@ -3,15 +3,12 @@
 #include <sdkhooks>
 #include <cstrike>
 
-
-new const g_iaGrenadeOffsets[] = {15, 17, 16, 14, 18, 17};
-
 public Plugin: myinfo =
 {
 	name = "[Any] Remove Weapons at Round End",
 	author = "Cruze",
 	description = "Remove all weapons from players and map",
-	version = "1.0",
+	version = "1.1",
 	url = ""
 };
 
@@ -27,16 +24,22 @@ public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 		{
 			for(int i = 0; i < 6; i++)
 			{
-				int weapon = GetPlayerWeaponSlot(client, i);
-				if(weapon > 0)
+				int weapon = -1;
+				while((weapon = GetPlayerWeaponSlot(client, i)) != -1)
 				{
-					RemovePlayerItem(client, weapon);
-					RemoveEdict(weapon);
+					if(IsValidEntity(weapon))
+					{
+						RemovePlayerItem(client, weapon);
+					}
 				}
-				RemoveNades(client);
 			}
+			SetEntProp(client, Prop_Send, "m_bHasDefuser", 0);
+			SetEntProp(client, Prop_Send, "m_bHasHeavyArmor", 0);
+			SetEntProp(client, Prop_Send, "m_ArmorValue", 0);
+			SetEntProp(client, Prop_Send, "m_bHasHelmet", 0);
 		}
 	}
+
 	new String: buffer[64];
 	for(new entity = MaxClients; entity < GetMaxEntities(); entity++)
 	{
@@ -50,9 +53,4 @@ public Action RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 		}
 	}
 	return Plugin_Continue;
-}
-stock RemoveNades(client)
-{
-	for(new i = 0; i < 6; i++)
-		SetEntProp(client, Prop_Send, "m_iAmmo", 0, _, g_iaGrenadeOffsets[i]);
 }
