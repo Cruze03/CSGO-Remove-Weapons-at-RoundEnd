@@ -3,7 +3,7 @@
 #include <sdkhooks>
 #include <cstrike>
 
-#pragma newdecls required
+#pragma semicolon 1
 #pragma newdecls required
 
 
